@@ -27,4 +27,4 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
     for n in range(1, port+1):
         executor.submit(PortScanner, n, target)
 
-print("\nscan is done")
+print("\nscan is done!")

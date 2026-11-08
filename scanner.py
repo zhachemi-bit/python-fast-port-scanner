@@ -23,12 +23,14 @@ def PortScanner(port, target):
 parser = argparse.ArgumentParser(description="Fast Python Port Scanner")
 parser.add_argument("-t","--target", required=True, help="Target IP address")
 parser.add_argument("-p","--ports", type=int , default=65535, help="number of ports to scan")
+parser.add_argument("-w","--worker",default=100,type=int,help="number of threads")
 args = parser.parse_args()
 
 target = args.target
 port = args.ports
+worker = args.worker
 
-with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+with concurrent.futures.ThreadPoolExecutor(max_workers=worker) as executor:
     for n in range(1, port+1):
         executor.submit(PortScanner, n, target)
 

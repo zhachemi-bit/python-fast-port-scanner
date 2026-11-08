@@ -1,5 +1,6 @@
 import socket as s
 import concurrent.futures
+import argparse
 
 def PortScanner(port, target):
     sock = s.socket(s.AF_INET, s.SOCK_STREAM)
@@ -19,9 +20,13 @@ def PortScanner(port, target):
             print(f"[+] Port {port} is OPEN  -->  (Timeout/No banner)")
 
     sock.close()
+parser = argparse.ArgumentParser(description="Fast Python Port Scanner")
+parser.add_argument("-t","--target", required=True, help="Target IP address")
+parser.add_argument("-p","--ports", type=int , default=65535, help="number of ports to scan")
+args = parser.parse_args()
 
-target = input("please enter the IP address that you want to scan: ")
-port = int(input("please enter the number of ports that you want to scan: "))
+target = args.target
+port = args.ports
 
 with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
     for n in range(1, port+1):

@@ -1,6 +1,7 @@
 import socket as s
 import concurrent.futures
 import argparse
+import ipaddress
 
 def PortScanner(port, target):
     sock = s.socket(s.AF_INET, s.SOCK_STREAM)
@@ -24,15 +25,19 @@ parser = argparse.ArgumentParser(description="Fast Python Port Scanner")
 parser.add_argument("-t","--target", required=True, help="Target IP address")
 parser.add_argument("-p","--ports", type=int , default=65535, help="number of ports to scan")
 parser.add_argument("-w","--worker",default=100,type=int,help="number of threads")
-parser.add_argument("-o","--output",type=str,help="outputfile to save the result")
 args = parser.parse_args()
 
 target = args.target
 port = args.ports
 worker = args.worker
+net = ipaddress.ip_network(target,strict=False)
+targets =list(net.hosts()) if net.num_addresses > 1 else [target]
+
+
 
 with concurrent.futures.ThreadPoolExecutor(max_workers=worker) as executor:
-    for n in range(1, port+1):
-        executor.submit(PortScanner, n, target)
+    for single_ip in targets:
+        for n in range(1, port+1):
+            executor.submit(PortScanner, n, str(single_ip))
 
 print("\nscan is done!")

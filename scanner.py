@@ -24,6 +24,7 @@ parser = argparse.ArgumentParser(description="Fast Python Port Scanner")
 parser.add_argument("-t","--target", required=True, help="Target IP address")
 parser.add_argument("-p","--ports", type=int , default=65535, help="number of ports to scan")
 parser.add_argument("-w","--worker",default=100,type=int,help="number of threads")
+parser.add_argument("-o","--output",type=str,help="outputfile to save the result")
 args = parser.parse_args()
 
 target = args.target
